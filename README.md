@@ -2,23 +2,21 @@
 
 **An exploratory reanalysis of the CoAuthor dataset: surveys, keystroke logs, and a validated microsimulation**
 
-Trial project, Option 2 (examine the code and data). Dataset: [CoAuthor](https://coauthor.stanford.edu/) (Lee, Liang & Yang, CHI 2022).
+Dataset: [CoAuthor](https://coauthor.stanford.edu/) (Lee, Liang & Yang, CHI 2022).
 All findings are observational associations.
 
 **Start here**
 
-0. The essay below: the personal motivation for this project, drawing on three papers on creativity.
+0. The essay below, *Giving Shape to the Trajectory of a Life*, on where creativity begins.
 1. [`paper/main.pdf`](paper/main.pdf): the full 8-page write-up (methods, every table, validation, limitations).
 2. The five bullets and key results below.
 3. [`qualitative_codes_en.csv`](qualitative_codes_en.csv): the thematic analysis. It covers 23 contrastively sampled comments, each with codes, one of five themes, an English paraphrase, and an interpretive limit.
 
 ---
 
-## Essay: Giving Shape to the Trajectory of a Life — Where Creativity Begins
+# Giving Shape to the Trajectory of a Life — Where Creativity Begins
 
-*The essay below states the personal motivation behind this analysis, drawing on three papers on creativity.*
-
-### When Experience Becomes a Question
+## When Experience Becomes a Question
 
 I believe that one starting point of creativity lies in the unique trajectory of a person's life. Even when we witness the same scene or acquire the same knowledge, what stays with us and what we ultimately come to question are different. What we have loved, what we have lost, and what we wish to protect direct our attention toward particular things. In this way, experience becomes interest, interest becomes a question, and a question leads us to imagine something that does not yet exist.
 
@@ -28,7 +26,7 @@ I would like to call the attitude underlying this starting point *authenticity*.
 
 Authenticity does not guarantee creativity, but it can serve as a compass, guiding which possibilities we explore and what we ultimately recognize as valuable.
 
-### Loving What We Do and Learning Along the Way
+## Loving What We Do and Learning Along the Way
 
 These choices can become clearer when we are deeply immersed in something we love. There are moments when our concern about how others perceive us fades, and our attention becomes fully absorbed in the problem and the possibilities before us.
 
@@ -52,7 +50,7 @@ What question did I begin with? Of the possibilities suggested to me, which did 
 
 Authenticity becomes visible in what we create through these acts of judgment. Along the way, remaining rooted in our own experiences and welcoming new perspectives that take us beyond our familiar selves need not be contradictory. They can happen together.
 
-### So, What Does This Mean?
+## So, What Does This Mean?
 
 **Be grounded. Be you.**
 
@@ -63,16 +61,6 @@ The kind of creativity I hope to see in the age of AI is one in which this way o
 With AI, I want to turn questions I have carried with me for a long time into things I can begin exploring and creating today. And through that process, I hope to discover anew what it is that I love.
 
 **We give shape to the trajectories of our lives, and what we create, in turn, reshapes the direction of the lives we have yet to live.**
-
-### From the essay to the analysis
-
-The essay's question — *what should remain our own when we create alongside AI?* — is what the analysis below operationalizes. In CoAuthor, "remaining our own" can be observed only partly, through ownership ratings, how much a writer typed, and which suggestions they accepted or rejected. Authenticity, motivation, and well-being themselves were not measured.
-
-**Essay references**
-
-- J. C. Kaufman, R. A. Beghetto. Beyond big and little: The four C model of creativity. *Review of General Psychology* 13(1):1–12, 2009. https://doi.org/10.1037/a0013688
-- T. M. Amabile. Componential theory of creativity. Harvard Business School Working Paper 12-096, 2012.
-- A. R. Doshi, O. P. Hauser. Generative AI enhances individual creativity but reduces the collective diversity of novel content. *Science Advances* 10(28):eadn5290, 2024. https://doi.org/10.1126/sciadv.adn5290
 
 ---
 
@@ -263,3 +251,9 @@ Three prompt coefficients in the `O > 3` threshold model are not identified (qua
 3. P. J. Curran, D. J. Bauer. The disaggregation of within-person and between-person effects in longitudinal models of change. *Annual Review of Psychology* 62:583–619, 2011.
 4. R. M. Ryan, E. L. Deci. Self-determination theory and the facilitation of intrinsic motivation, social development, and well-being. *American Psychologist* 55(1):68–78, 2000.
 5. V. Braun, V. Clarke. Can I use TA? Should I use TA? Should I not use TA? *Counselling and Psychotherapy Research* 21(1):37–47, 2021.
+
+**Cited in the essay**
+
+- J. C. Kaufman, R. A. Beghetto. Beyond big and little: The four C model of creativity. *Review of General Psychology* 13(1):1–12, 2009. https://doi.org/10.1037/a0013688
+- T. M. Amabile. Componential theory of creativity. Harvard Business School Working Paper 12-096, 2012.
+- A. R. Doshi, O. P. Hauser. Generative AI enhances individual creativity but reduces the collective diversity of novel content. *Science Advances* 10(28):eadn5290, 2024. https://doi.org/10.1126/sciadv.adn5290
