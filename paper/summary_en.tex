@@ -1,0 +1,102 @@
+% Two-page English summary (pdflatex summary_en.tex)
+\documentclass[10pt]{article}
+\usepackage[margin=0.78in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\setlist{nosep,leftmargin=1.4em,topsep=2pt}
+\linespread{1.06}
+\pagestyle{empty}
+\newcommand{\claim}[1]{\par\smallskip\noindent\fcolorbox{black!25}{black!4}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{#1}}\par\smallskip}
+\newcommand{\head}[1]{\par\medskip\noindent{\large\bfseries #1}\par\smallskip}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Feeling Understood Is Not Feeling Ownership}\\[3pt]
+{\normalsize Survey, interaction-log, and microsimulation evidence from CoAuthor \textemdash{} two-page summary}\\[2pt]
+{\small Hyoyeon (Elina) Lee \quad 2026-10-09 \quad \url{https://github.com/yeona-lee-researcher/coauthor-ownership-analysis}}
+\end{center}
+
+\head{(1) Motivation}
+What users value when writing with AI may be not only the quality of the text but whether it still carries \emph{their} intent.
+Evaluating AI collaboration by usage or output quality alone misses the experience of being helped while remaining the author.
+I asked whether feeling understood by an AI writing assistant goes together with feeling that the resulting text is one's own,
+and separated stable differences between writers from variation across the same writer's sessions, since CoAuthor writers completed up to 89 sessions each.
+
+\head{(2) Hypothesis}
+\textbf{H1 (primary):} in sessions where a writer felt \emph{more understood than usual}, ownership is higher, after accounting for the human share of text, prompt, and model setting.
+H2: feeling understood goes with ideation help. H3: the ideation--ownership link is stronger when understanding is higher.
+Directions were fixed before the first model run (not preregistered). Log analyses and the simulation were added after the survey results and are exploratory.
+
+\head{(3) Approach}
+\begin{itemize}
+  \item \textbf{Survey models.} Linked metadata and surveys (1,407 sessions with at least one AI request; 61 writers). Split each rating into a writer mean and a within-writer deviation; ordinal GEE with writer-clustered errors; ten sensitivity analyses and a writer bootstrap.
+  \item \textbf{Log replay.} Replayed all 1,447 keystroke logs, tagging every character as prompt, human, or AI. This reproduces the metadata's human share within 1 pp in 99.9\% of sessions and its selection counts in 100\%. Sessions were segmented into writing, pause ($\ge$10\,s), and request episodes (accepted / rejected / unanswered).
+  \item \textbf{Microsimulation.} A semi-Markov model of these episodes with writer-level shrinkage, session-level variation, and writer stopping. Validated on unseen writers (5-fold by writer) and on the later half of each frequent writer's sessions; tuning used training data only.
+  \item \textbf{Qualitative.} Contrastive sampling of 23 comments (16 writers) where understanding and ownership agree or diverge; preliminary AI-assisted codes grouped into five themes. Human review is pending.
+\end{itemize}
+
+\head{(4) Quantitative and qualitative results}
+\begin{center}\small
+\begin{tabular}{llc}
+\toprule
+Within-writer association & Odds ratio [95\% CI] & Verdict \\
+\midrule
+Understanding $\rightarrow$ ownership (H1) & 0.85 [0.66, 1.09] & not supported \\
+Understanding $\rightarrow$ ideation help (H2) & 3.40 [2.76, 4.18] & supported \\
+Human share +10 pp $\rightarrow$ ownership & 1.33 [1.13, 1.56] & positive \\
+Unanswered requests +10 pp $\rightarrow$ understanding (log) & 0.77 [0.69, 0.86] & negative \\
+Revising AI text +10 pp $\rightarrow$ ownership (log) & 1.00 [0.84, 1.18] & none \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+  \item \textbf{Surveys.} No sensitivity analysis gave a positive within-writer understanding--ownership link. The between-writer link (OR 2.36) weakened to 1.37 when each writer was weighted equally.
+  \item \textbf{Logs.} 6.8\% of requests were never answered. Requests came a median 0.4\,s after typing; only 2.1\% followed $\ge$10\,s of inactivity.
+  \item \textbf{Simulation.} Knowing the \emph{order} of actions predicts unseen writers far better than knowing only their frequencies (log-likelihood per event $-1.27 \rightarrow -0.80$). Writer-specific parameters predicted the same writer's later sessions better than a population model: +0.068 nats/event [0.041, 0.106], 35 of 39 writers. This is a log-score gain, not an accuracy percentage.
+  \item \textbf{Qualitative.} Help and ownership diverged in both directions. One writer rated understanding and ideation 7 but ownership 2, describing themselves as ``closer to an editor than a writer.'' Another rated understanding 3 but ownership 7. Low understanding ratings often accompanied service complaints (no suggestions, latency), which the log result above confirms.
+\end{itemize}
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+Later sessions: 90\% predictive-interval coverage (target .90) & Population model & Writer + stopping + session \\
+\midrule
+Q episodes (requests, late displays, reopens) & .584 & .809 \\
+Accepted suggestions & .583 & .809 \\
+Human share of inserted characters & .542 & .771 \\
+Session duration & .888 & .926 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Coverage shows how realistically the model anticipates the range of behavior; it is not accuracy.
+Error in predicting human share also fell from 15.6 to 10.7 pp. Coverage stays below .90, so much session-to-session variation remains unexplained.
+Writer clustering was high (ICC .56--.84). An in-sample check reproduced most of it in creative writing, less in argumentative writing,
+and not for duration: overall session length was predicted well, but not which writers consistently write long or short sessions.
+
+\head{(5) Findings}
+\begin{enumerate}
+  \item \textbf{Feeling understood is not feeling ownership.} Within a writer, understanding tracked ideation help, not ownership; ownership tracked how much the writer typed.
+  \item \textbf{``Understanding'' ratings partly measure availability.} They fell when the system failed to respond, so a single satisfaction-style score mixes model quality, service availability, and ideation support.
+  \item \textbf{AI is called in the flow of writing, not after a stall.} Accepting a suggestion was followed by more human writing 86--87\% of the time: acceptance is part of an ongoing process, not its end.
+  \item \textbf{Recurring individual styles over a shared rhythm.} A writer's past collaboration predicts their future collaboration, while the same writer still varies from session to session. These are behavioral regularities in this task, not measures of personality or motivation.
+  \item \textbf{Failures change the experience more visibly than the text.} In a model-implied scenario (not causal) that answers the never-answered requests, accepted suggestions rise by 0.53 per session and the human share of inserted characters falls by 1.3 pp. More AI-inserted text is not less human direction.
+\end{enumerate}
+
+\claim{\textbf{Central claim.} CoAuthor interactions show both recurring writer-specific patterns and session-level variation.
+A writer's past record improved prediction of later sessions, but this predictability is not a direct measure of personality or intrinsic motivation.
+Designing human--AI collaboration should consider the shared action rhythm, each user's history, and the current session's context together,
+and should evaluate ideation help, availability, and ownership separately.}
+
+\noindent\textbf{Next question.} Beyond ``does this person usually use AI a lot?'', ask: \emph{what role does this person want in this task, and does the current form of help fit it?}
+Predicting past behavior well does not mean reinforcing it is good personalization.
+A follow-up experiment would ask writers for their desired role before writing and manipulate an intent-confirmation interface and time budget, testing whether role alignment explains ownership and satisfaction.
+
+\noindent\textbf{Limits.} Single-item post-session ratings; observational and partly post hoc; human share counts inserted, not final, characters;
+the simulation under-reproduces writers who rarely use AI and writer-level duration differences; qualitative codes await human review.
+
+\end{document}

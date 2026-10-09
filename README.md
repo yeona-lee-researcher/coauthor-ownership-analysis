@@ -6,7 +6,7 @@ Exploratory reanalysis of the public [CoAuthor](https://coauthor.stanford.edu/) 
 | Layer | What it does | Script |
 |---|---|---|
 | Survey | Links metadata + surveys; within/between-writer ordinal GEE, sensitivity analyses, bootstrap | `analyze.py` |
-| Qualitative | Hash-checked join of 23 preliminary (AI-assisted, not yet human-reviewed) case codes | `join_qualitative.py` |
+| Qualitative | Hash-checked join of 23 preliminary (AI-assisted, not yet human-reviewed) case codes; English codebook with themes in `qualitative_codes_en.csv` | `join_qualitative.py` |
 | Log replay | Replays every Quill delta with per-character provenance; episodes W / P / QA / QR / QN | `process_logs.py` |
 | Process models | E1–E4: availability → understanding, AI revision → ownership, pauses and requests, writing after requests | `process_models.py` |
 | Microsimulation | Semi-Markov model with writer shrinkage, session heterogeneity, writer stopping; validated on held-out writers and later sessions | `simulate.py` |
