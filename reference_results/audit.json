@@ -1,0 +1,185 @@
+{
+  "sha256": "bb850549c91ca5d7b34f20b59833f61f0f362b817b91fe333d08b270c25647c4",
+  "sheets": {
+    "creative": {
+      "metadata_rows": 830,
+      "metadata_workers": 57,
+      "survey_rows": 833,
+      "duplicate_excess": 1,
+      "survey_unmatched_rows": 3,
+      "metadata_without_survey": 1,
+      "worker_mismatch": 0,
+      "no_query": 6
+    },
+    "argumentative": {
+      "metadata_rows": 615,
+      "metadata_workers": 47,
+      "survey_rows": 625,
+      "duplicate_excess": 2,
+      "survey_unmatched_rows": 8,
+      "metadata_without_survey": 0,
+      "worker_mismatch": 0,
+      "no_query": 31
+    }
+  },
+  "decisions": [
+    "Trim surrounding whitespace in participant and session IDs; do not fuzzy-match.",
+    "Retain latest survey for duplicated session ID; earliest retained as sensitivity.",
+    "Require exact session+participant match; primary analysis requires num_query > 0.",
+    "Treat ratings as observed 1-7 ordinal categories despite paper section 5.2 stating 5 points.",
+    "No imputation; no-query is observed non-use, not missing data.",
+    "All analyses exploratory; protocol was specified after inspecting schema, before model outputs."
+  ],
+  "joined_sessions": 1444,
+  "joined_workers": 61,
+  "primary_sessions": 1407,
+  "primary_workers": 61,
+  "primary_genres": {
+    "creative": 823,
+    "argumentative": 584
+  },
+  "primary_sessions_per_worker": {
+    "count": 61.0,
+    "mean": 23.065573770491802,
+    "std": 26.551126060526457,
+    "min": 1.0,
+    "25%": 3.0,
+    "50%": 9.0,
+    "75%": 40.0,
+    "max": 89.0
+  },
+  "workers_varying_understanding": 49,
+  "workers_varying_ownership": 47,
+  "versions": {
+    "python": "3.12.14",
+    "pandas": "2.2.3",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "FE_cluster_bootstrap": {
+    "B": 500,
+    "seed": 20261009,
+    "percentile_CI": [
+      -0.204537372030819,
+      0.027953655880272495
+    ],
+    "point": -0.09440056788801965
+  },
+  "models": {
+    "primary_ordinal": {
+      "n": 1407,
+      "workers": 61,
+      "max_abs_mean_score": 5.978656999175993e-10,
+      "condition_number": 79570.03081222324,
+      "optimizer_message": "Optimization terminated successfully."
+    },
+    "equal_person_weight": {
+      "n": 1407,
+      "workers": 61,
+      "max_abs_mean_score": 1.548388853220934e-09,
+      "condition_number": 135057.61917201156,
+      "optimizer_message": "Desired error not necessarily achieved due to precision loss."
+    },
+    "session_order_adjusted": {
+      "n": 1407,
+      "workers": 61,
+      "max_abs_mean_score": 6.262410610612427e-10,
+      "condition_number": 80143.51496120456,
+      "optimizer_message": "Optimization terminated successfully."
+    },
+    "extended_behavior": {
+      "n": 1407,
+      "workers": 61,
+      "max_abs_mean_score": 9.825930447232029e-10,
+      "condition_number": 505215.3821374091,
+      "optimizer_message": "Optimization terminated successfully."
+    },
+    "ideation_adjusted": {
+      "n": 1407,
+      "workers": 61,
+      "max_abs_mean_score": 2.785157785446797e-09,
+      "condition_number": 110888.05049604032,
+      "optimizer_message": "Desired error not necessarily achieved due to precision loss."
+    },
+    "fluency_adjusted": {
+      "n": 1407,
+      "workers": 61,
+      "max_abs_mean_score": 8.499857753070172e-10,
+      "condition_number": 128817.64159198436,
+      "optimizer_message": "Optimization terminated successfully."
+    },
+    "within_interaction": {
+      "n": 1407,
+      "workers": 61,
+      "max_abs_mean_score": 2.1870315626616054e-09,
+      "condition_number": 114755.84265792454,
+      "optimizer_message": "Desired error not necessarily achieved due to precision loss."
+    },
+    "ideation_outcome": {
+      "n": 1407,
+      "workers": 61,
+      "max_abs_mean_score": 3.331774460749136e-10,
+      "condition_number": 87861.53559024299,
+      "optimizer_message": "Optimization terminated successfully."
+    },
+    "all_queries_included": {
+      "n": 1444,
+      "workers": 61,
+      "max_abs_mean_score": 6.62160959188213e-10,
+      "condition_number": 77743.75781321034,
+      "optimizer_message": "Optimization terminated successfully."
+    },
+    "earliest_duplicate": {
+      "n": 1407,
+      "workers": 61,
+      "max_abs_mean_score": 8.803972860235973e-10,
+      "condition_number": 79446.50504431059,
+      "optimizer_message": "Optimization terminated successfully."
+    },
+    "creative": {
+      "n": 823,
+      "workers": 57,
+      "max_abs_mean_score": 9.722860649894025e-10,
+      "condition_number": 49622.73094594923,
+      "optimizer_message": "Optimization terminated successfully."
+    },
+    "argumentative": {
+      "n": 584,
+      "workers": 47,
+      "max_abs_mean_score": 9.310408048912335e-10,
+      "condition_number": 57074.97369171204,
+      "optimizer_message": "Optimization terminated successfully."
+    }
+  },
+  "raw_spearman": {
+    "understanding": 0.05797264517739173,
+    "ideation": 0.10458349771398923,
+    "written_by_human": 0.28076787621539073
+  },
+  "gap_descriptives": {
+    "valid_n": 1405,
+    "mean": -0.7147544483985766,
+    "median": -1.0
+  },
+  "numerical_validation": {
+    "gradient_error_norm": 1.0909201356146465e-07,
+    "intercept_only_max_probability_error": 8.473997059610383e-10,
+    "FE_FWL_coefficient_difference": 3.608224830031759e-16
+  },
+  "qualitative_sampling": {
+    "eligible_cells": {
+      "creative_low_low": 9,
+      "creative_low_high": 71,
+      "creative_high_low": 25,
+      "creative_high_high": 347,
+      "argumentative_low_low": 2,
+      "argumentative_low_high": 73,
+      "argumentative_high_low": 11,
+      "argumentative_high_high": 237
+    },
+    "selected_n": 23,
+    "selected_workers": 16,
+    "max_per_genre_quadrant": 3,
+    "seed": 20261009
+  }
+}

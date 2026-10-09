@@ -1,0 +1,241 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,multirow}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\setlist{nosep,leftmargin=*}
+\newcommand{\OR}{\mathrm{OR}}
+
+\title{\textbf{Feeling Understood Is Not Feeling Ownership:}\\
+\large Within- and Between-Writer Associations of Perceived Understanding, Ideation Help,\\ and Ownership in the CoAuthor Dataset}
+\author{Trial project, Option 2 --- exploratory secondary analysis\\
+\small Draft of 2026-10-09}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Does feeling that an AI writing assistant understands one's intent go together with feeling that the resulting text is one's own?
+We linked the public CoAuthor metadata and post-session surveys and analyzed 1,407 sessions in which writers queried GPT-3 at least once (61 observed writer IDs).
+Perceived understanding and human-written share were decomposed into a writer mean and a within-writer deviation, and ownership was modeled with a cumulative-logit, working-independence GEE with prompt fixed effects, model-setting indicators, and writer-clustered sandwich errors.
+The hypothesized positive within-writer association between understanding and ownership was not supported ($\OR=0.847$, 95\% CI [0.660, 1.086]).
+In contrast, a session with higher-than-usual understanding was strongly associated with higher reported ideation help ($\OR=3.396$ [2.761, 4.176]), and a 10-percentage-point higher-than-usual human-written share was associated with higher ownership ($\OR=1.327$ [1.130, 1.559]).
+The between-writer association of understanding with ownership was positive in the main model but attenuated under equal-writer weighting.
+Preliminary coding of 23 contrastively sampled comments showed useful support co-occurring with low ownership (``more an editor than a writer'') and intent mismatch co-occurring with high ownership.
+We argue that ideation support and ownership should be evaluated as separate outcomes, and propose \emph{role alignment}---whether the writer's desired and experienced roles match---as a follow-up question.
+All results are observational associations from single-item post-hoc ratings.
+\end{abstract}
+
+\section{Introduction}
+What users value in co-creative writing may not be only the quality of the final text, but whether the text still carries \emph{their} intent: which direction they chose, which suggestions they accepted, and how they revised them.
+If ``good AI use'' is defined by usage volume or output fluency alone, the experience of exploring with AI while remaining the author of one's work is invisible.
+
+Our starting motivation is respect for the individual's own intent and values in human--AI collaboration, related to autonomy in self-determination theory~\cite{ryan2000sdt}.
+CoAuthor~\cite{lee2022coauthor} contains no validated measures of authenticity, personality, intrinsic motivation, or well-being, so we restrict the question to three observable post-session ratings: \emph{the system understood what I was trying to write} (perceived understanding, $U$), \emph{the suggestions helped me come up with new ideas} (ideation help, $I$), and \emph{I feel like the story/essay is mine} (ownership, $O$).
+Prior work shows that AI-generated text can lower perceived ownership even when users still declare authorship~\cite{draxler2024ghostwriter}, motivating us to treat ownership as distinct from both helpfulness and the share of text typed by the human.
+
+Because the same writers completed many sessions (median 9, range 1--89), we separate two questions that are easily conflated~\cite{curran2011disaggregation}:
+\textbf{between writers}, do writers who generally feel understood report more ownership?
+and \textbf{within writers}, in sessions where the same person felt \emph{more understood than usual}, did they also feel more ownership?
+The within-writer question matches our interest in situational variation of collaboration.
+
+\paragraph{Hypotheses.} Directions were fixed after inspecting the data structure but before the first model run (not preregistered).
+\begin{itemize}
+  \item \textbf{H1 (primary).} Within-writer perceived understanding is positively associated with ownership, adjusting for human-written share, prompt, and model setting.
+  \item \textbf{H2.} Within-writer perceived understanding is positively associated with ideation help.
+  \item \textbf{H3.} The within-writer association between ideation help and ownership is more positive when within-writer understanding is higher ($U^W\!\times I^W$).
+  \item \textbf{RQ4 (qualitative).} In sessions where understanding and ownership agree or diverge, how do writers describe support, mismatch, choice, and role?
+\end{itemize}
+H1 is the single primary test; H2--H3 are Holm-corrected as one family.
+
+\section{Data}
+We downloaded the four official sheets (creative/argumentative metadata and surveys) as XLSX on 2026-10-09 (SHA-256 \texttt{bb850549\ldots47c4}).
+Table~\ref{tab:flow} gives the sample flow. Sessions were linked one-to-one by trimmed session ID within genre; worker IDs agreed for all linked sessions.
+Duplicate survey submissions kept the latest response; unmatched surveys were not imputed or fuzzy-matched.
+Sessions with zero queries (37) were treated as observed non-use, not missing data, and excluded from the main sample.
+
+\begin{table}[h]
+\centering\small
+\caption{Sample flow.}\label{tab:flow}
+\begin{tabular}{lrl}
+\toprule
+Step & $n$ & Note \\
+\midrule
+Metadata sessions & 1,445 & creative 830, argumentative 615 \\
+Survey rows & 1,458 & creative 833, argumentative 625 \\
+\quad excess duplicate survey rows & $-3$ & latest response kept \\
+\quad surveys with no metadata match & $-11$ & not imputed \\
+Linked sessions & 1,444 & 1 metadata session had no survey \\
+\quad zero-query sessions & $-37$ & observed non-use \\
+\textbf{Analysis sample} & \textbf{1,407} & creative 823, argumentative 584; 61 writer IDs \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Discrepancies to resolve.} The paper reports 63 writers, whereas the public metadata contain 61 unique IDs; the paper describes ownership on a 5-point scale, whereas the downloaded responses range 1--7.
+We used the observed 1--7 coding without recoding and flag both for confirmation with the dataset authors.
+
+\paragraph{Variables.} $U$, $I$, $O$: 1--7 ratings. $H$: human-written share of the final text (0--100\%, entered per 10 pp). Prompt (20 levels) enters as fixed effects; model setting is the genre-specific high/low decoding configuration (creative: $T{=}.30$/FP$=0$ vs.\ $T{=}.75$/FP$=1$; argumentative: $T{=}.20$ vs.\ $.90$, FP$=.5$). Session duration is not treated as time pressure, as the CoAuthor timer indicated a minimum, not a deadline.
+
+\section{Method}
+\subsection{Quantitative model}
+For writer $i$ and session $j$, $\bar U_i = n_i^{-1}\sum_j U_{ij}$ and $U^W_{ij} = U_{ij}-\bar U_i$ (likewise for $H$). We fit
+\begin{equation}
+\operatorname{logit}\Pr(O_{ij}>k)=\alpha_k+\beta_W U^W_{ij}+\beta_B\bar U_i+\gamma_W\tfrac{H^W_{ij}}{10}+\gamma_B\tfrac{\bar H_i}{10}+\delta_{p(ij)}+\theta_C R^C_{ij}+\theta_A R^A_{ij},\quad k=1,\dots,6,
+\end{equation}
+by stacking the cumulative binary indicators $\mathbb{1}(O_{ij}>k)$ and solving the working-independence ordinal GEE score (equivalently, a cumulative composite likelihood with common slopes).
+Uncertainty uses a writer-clustered sandwich covariance with $G/(G{-}1)$ correction and $t_{G-1}$ intervals ($G{=}61$).
+$\exp(\beta_W)$ is the common cumulative odds ratio for a 1-point higher-than-usual $U$; it is not a probability ratio or a causal effect.
+H2 replaces the outcome with $I$; H3 adds $\bar I_i$, $I^W_{ij}$, and $U^W_{ij}I^W_{ij}$.
+The estimator was implemented directly in SciPy and checked numerically (analytic vs.\ finite-difference gradient $1.1\times10^{-7}$; intercept-only model reproduces observed cumulative proportions to $8.5\times10^{-10}$; FWL check of the linear FE coefficient to $3.6\times10^{-16}$).
+
+\paragraph{Sensitivity analyses} (added after initial results; reported in full, not selected for significance):
+equal total weight per writer ($w_{ij}\propto 1/n_i$); within-writer session order; usage and duration; additional post-hoc ratings (ideation, fluency); including zero-query sessions; earliest duplicate response; genre-specific fits; threshold-specific binary models $O>k$; and a linear writer fixed-effects model with a writer-level bootstrap (500 resamples, seed 20261009).
+
+\subsection{Qualitative contrast sampling}
+\begin{algorithm}[h]
+\small
+\caption{Contrastive case selection and preliminary coding}
+\begin{algorithmic}[1]
+\State Cells $\gets \{U\le3, U\ge6\}\times\{O\le3, O\ge6\}\times\{\text{creative},\text{argumentative}\}$ \Comment{8 cells; ratings 4--5 excluded}
+\For{each cell $c$}
+  \State $S_c \gets$ sessions in $c$ with a non-empty improvement or free comment; shuffle with seed 20261009
+  \State select up to 3 sessions, at most 1 per writer within $c$
+\EndFor
+\State Read comments; assign multi-label codes (intent fit/mismatch, repetition, availability, ideation, choice, role)
+\State Record a paraphrase and an interpretive limit for each case; link to quantitative contrasts
+\State \textbf{[pending]} human re-coding, log replay of accept/revise/discard sequences
+\end{algorithmic}
+\end{algorithm}
+This yielded 23 sessions from 16 writers. Coding was not blind (cases were selected on ratings), was produced by a single AI-assisted coder, and has not yet been reviewed by a human coder; we therefore report patterns, not prevalences, and do not claim a completed reflexive thematic analysis~\cite{braun2021}.
+Comments mostly answer an ``improvement'' prompt, which biases toward criticism.
+
+\section{Results}
+\subsection{Descriptives}
+Ownership was concentrated at the top of the scale (565 sessions at 7, 406 at 6).
+Means (SD) were similar across genres: ownership 5.87 (1.23) creative vs.\ 5.94 (1.16) argumentative; understanding 5.52 (1.52) vs.\ 5.39 (1.63); ideation help 5.47 (1.71) vs.\ 5.06 (1.89); human-written share 73.2\% vs.\ 71.0\%.
+Pooled, unadjusted Spearman correlations with ownership were small: understanding .058, ideation .105, human share .281.
+
+\subsection{Hypothesis tests}
+\begin{table}[h]
+\centering\small
+\caption{Main conditional associations (cumulative odds ratios, writer-clustered 95\% CI).}\label{tab:main}
+\begin{tabular}{llccl}
+\toprule
+Outcome & Predictor & OR & 95\% CI & $p$ \\
+\midrule
+Ownership & $U^W$ (H1) & 0.847 & [0.660, 1.086] & .187 \\
+Ownership & $\bar U$ (between) & 2.356 & [1.565, 3.547] & $<$.001 \\
+Ownership & $H^W$ (+10 pp) & 1.327 & [1.130, 1.559] & $<$.001 \\
+Ideation help & $U^W$ (H2) & 3.396 & [2.761, 4.176] & Holm $<$.001 \\
+Ownership & $U^W\times I^W$ (H3) & 0.940 & [0.876, 1.009] & Holm .087 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{H1 was not supported}: the point estimate is below 1 and the interval includes 1. We do not reinterpret this as ``understanding lowers ownership.''
+\textbf{H2 was supported} as an association between two post-hoc ratings; shared response style and semantic overlap of the items are plausible contributors.
+\textbf{H3 was not supported.}
+Within-writer human-written share was positively associated with ownership.
+
+\subsection{Robustness}
+\begin{table}[h]
+\centering\small
+\caption{Within-writer understanding $\to$ ownership across specifications.}\label{tab:sens}
+\begin{tabular}{lcc@{\qquad}lcc}
+\toprule
+Specification & OR & 95\% CI & Specification & OR & 95\% CI\\
+\midrule
+Primary & 0.847 & [0.660, 1.086] & + fluency rating & 0.832 & [0.644, 1.074]\\
+Equal writer weight & 0.854 & [0.735, 0.992] & Incl.\ zero-query & 0.847 & [0.659, 1.088]\\
++ session order & 0.852 & [0.663, 1.094] & Earliest duplicate & 0.847 & [0.660, 1.086]\\
++ usage, duration & 0.839 & [0.651, 1.082] & Creative only & 0.927 & [0.693, 1.240]\\
++ ideation rating & 0.919 & [0.768, 1.101] & Argumentative only & 0.741 & [0.572, 0.959]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+No specification produced a positive within-writer association.
+Under equal-writer weighting the \emph{between}-writer OR fell from 2.356 to 1.374 [0.978, 1.932], so the between-writer result depends on heavily participating writers and should not be read as a stable trait-level relationship.
+The linear writer-FE model gave $-0.094$ points [$-0.226$, 0.037]; bootstrap percentile CI [$-0.205$, 0.028].
+Threshold-specific ORs declined from 1.016 ($O>3$) to 0.741 ($O>6$), suggesting that the proportional-odds summary may hide threshold heterogeneity; a formal test is pending.
+Negative estimates in single subgroups are not promoted to new confirmatory findings.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.78\linewidth]{associations.png}
+\caption{Within-writer understanding $\to$ ownership odds ratios across specifications (95\% CI; dashed line = 1). From \texttt{reference\_results/associations.png}.}
+\end{figure}
+
+\subsection{Qualitative contrasts}
+\begin{table}[h]
+\centering\small
+\caption{Illustrative contrastive cases (paraphrased, not quoted). $U/I/O$ on 1--7; $H$ = human-written share.}\label{tab:qual}
+\begin{tabularx}{\linewidth}{@{}l c c X X@{}}
+\toprule
+Pattern & $U/I/O$ & $H$ & Writer's account (paraphrase) & What it supports \\
+\midrule
+Useful support, low ownership & 7/7/2 & 39\% & Used many suggestions; described self as closer to an editor than a writer. & Helpfulness, role, and ownership are distinct. \\
+Mismatch, high ownership & 3/2/7 & 89\% & AI's creative suggestions did not fit the intended direction. & Mismatch and ownership can co-occur. \\
+Unstuck, low ownership & 6/6/3 & 87\% & Got stuck midway; AI's new direction let them continue. & Help and low ownership coexist despite high human share. \\
+Deliberate delegation & 7/7/3 & 15\% & Let the AI set topic and direction to test the system. & Low ownership need not mean unwanted loss of agency. \\
+Questions scaffold expression & 2/5/6 & 78\% & Criticized latency but liked AI asking questions so they wrote sentences themselves. & A low $U$ may reflect availability, not all support. \\
+Choosing among options & 6/5/6 & 66\% & Could choose the story's direction among several suggestions. & Candidate for measuring control directly. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Across cases, low understanding ratings often reflected service issues (no suggestion returned, latency) rather than semantic mismatch, and high helpfulness did not by itself imply ownership.
+
+\section{Discussion}
+\paragraph{Ideation help and ownership are different outcomes.}
+Feeling understood tracked feeling helped, but not feeling ownership, within the same writer.
+Evaluations of writing assistants that collapse ``positive experience'' into one score would miss this divergence, just as individual creativity gains and collective diversity must be evaluated separately~\cite{doshi2024}.
+
+\paragraph{Role alignment as a follow-up question.}
+The cases suggest that low ownership is not necessarily a bad outcome: a writer who chose to act as an editor may report low ownership accurately.
+A design goal may therefore be not to maximize ownership but to ensure that the \emph{experienced role matches the desired role}.
+This hypothesis emerged from the analysis and has not been tested.
+
+\paragraph{Unit of analysis matters.}
+Session-weighted and writer-weighted estimates answer different questions (``a typical session'' vs.\ ``a typical writer''); with highly unequal participation, the choice changes the between-writer conclusion. Writer means are observational summaries, not personality measures.
+
+\paragraph{Limitations.}
+Single-item, same-time self-reports cannot identify causal order; human-written share may itself be a consequence of the collaboration, so the adjusted $\beta_W$ is not a total effect.
+Ratings are ceiling-heavy and proportional odds may not hold.
+Sixty-one clusters limit between-writer and interaction estimates.
+The data reflect paid crowdworkers using GPT-3 in 2021, limiting generalization.
+Qualitative coding is preliminary and awaits human review; the 63/61 writer and 5/7-point scale discrepancies remain unresolved.
+No claims are made about authenticity, motivation, or mental health.
+
+\section{Future Work}
+\begin{enumerate}
+  \item \textbf{Process analysis of raw logs.} Reconstruct query $\to$ review $\to$ accept/discard $\to$ revise sequences; define time-to-first-query (with right-censoring) and pre-query pauses (10/20/30\,s sensitivity), excluding API-inserted text when measuring subsequent human writing. Pauses are not equated with ``being stuck.''
+  \item \textbf{Descriptive state-transition model and microsimulation.} Estimate writer- and prompt-aware transition models, validate on held-out writers, and simulate trajectories only after the model reproduces observed behavior; simulated scenarios are not reported as intervention effects.
+  \item \textbf{Experiment.} A $2\times2$ design crossing an intent-confirmation interface (goal/perspective check vs.\ time-matched neutral preparation) with time budget (tight vs.\ generous), measuring ownership (primary), ideation help, perceived control, blind-rated creativity, and desired vs.\ experienced role; preregistered, intention-to-treat, with simulation-based power analysis rather than transplanting observational ORs.
+\end{enumerate}
+
+\paragraph{Reproducibility.}
+\texttt{run\_pipeline.py} executes linkage, modeling, qualitative joining (hash-checked against source comments), and table generation; \texttt{reference\_results/} contains the outputs reported here. Raw data are re-downloaded from the public source.
+
+\small
+\begin{thebibliography}{9}
+\bibitem{lee2022coauthor} M.~Lee, P.~Liang, and Q.~Yang. CoAuthor: Designing a human--AI collaborative writing dataset for exploring language model capabilities. In \emph{CHI}, 2022. \url{https://doi.org/10.1145/3491102.3502030}
+\bibitem{draxler2024ghostwriter} F.~Draxler et al. The AI ghostwriter effect: When users do not perceive ownership of AI-generated text but self-declare as authors. \emph{ACM TOCHI}, 31(2), 2024. \url{https://doi.org/10.1145/3637875}
+\bibitem{curran2011disaggregation} P.~J.~Curran and D.~J.~Bauer. The disaggregation of within-person and between-person effects in longitudinal models of change. \emph{Annual Review of Psychology}, 62:583--619, 2011.
+\bibitem{ryan2000sdt} R.~M.~Ryan and E.~L.~Deci. Self-determination theory and the facilitation of intrinsic motivation, social development, and well-being. \emph{American Psychologist}, 55:68--78, 2000.
+\bibitem{doshi2024} A.~R.~Doshi and O.~P.~Hauser. Generative AI enhances individual creativity but reduces the collective diversity of novel content. \emph{Science Advances}, 10(28), 2024.
+\bibitem{braun2021} V.~Braun and V.~Clarke. Can I use TA? Should I use TA? Should I not use TA? \emph{Counselling and Psychotherapy Research}, 21:37--47, 2021.
+\end{thebibliography}
+\end{document}

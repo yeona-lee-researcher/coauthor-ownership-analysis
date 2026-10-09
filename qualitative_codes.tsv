@@ -1,0 +1,24 @@
+case_id	codes	paraphrase_ko	interpretive_limit
+Q01	repetition;coherence_problem	대화에서 같은 표현을 반복하고 등장인물의 대화가 자연스럽거나 논리적으로 이어지지 않았다고 설명함.	낮은 소유감의 원인을 직접 설명한 진술은 아님.
+Q02	self_reported_stuck;repetition;failed_ideation	줄거리를 떠올리기 어려워 AI에 많이 의존했지만 이야기가 같은 곳을 맴돌았다고 설명함.	막힘과 의존은 본인의 사후 설명이며 로그로 시간 순서를 확인하지 않음.
+Q03	insufficient_novelty	제안이 이야기의 가능성을 충분히 과감하게 확장하지 않았다고 평가함.	참신성 평가를 성격이나 내적 동기 점수로 바꾸지 않음.
+Q04	intent_mismatch;repetition	관련 단어는 쓰지만 자신의 줄거리 방향을 따라가지 못했다고 설명함.	낮은 이해 평가와 높은 소유감이 공존하지만 인과 순서는 알 수 없음.
+Q05	intent_mismatch;self_reflection	AI의 창의적인 제안이 본인이 원한 방향과 맞지 않았으며 자신의 이야기에도 일관성 문제가 있었을 수 있다고 돌아봄.	책임 인정과 높은 소유감의 관계를 한 사례로 일반화하지 않음.
+Q06	intent_mismatch;self_reported_stuck;failed_ideation	이야기를 시작하기 어려웠고 여러 번 요청해도 표현하려는 내용에 맞는 제안을 얻지 못했다고 설명함.	AI가 어려움을 일으켰는지 원래 어려웠는지는 분리할 수 없음.
+Q07	useful_variety;request_more_options	제안이 다양해서 선택지를 더 받고 싶었다고 설명함.	낮은 소유감의 이유는 코멘트에 제시되지 않음.
+Q08	delegated_direction;editorial_choice;interface_limit	AI가 주제와 방향을 정하도록 두었고 시스템을 시험하려고 이야기 대부분을 AI로 썼다고 설명함. 복수 제안 선택 기능을 요청함.	자발적인 실험적 사용으로 볼 여지가 있어 부정적인 주도권 상실로 단정할 수 없음.
+Q09	useful_ideation;coherent_continuation	제안이 독특하고 줄거리에 맞으며 이야기를 전진시켰다고 긍정적으로 평가함.	긍정적인 도움과 낮은 소유감의 공존은 확인되지만 원인은 알 수 없음.
+Q10	intent_fit;coherent_continuation	시스템이 이야기의 세부 사항을 따라가며 내용을 더했다고 설명함.	짧은 응답이므로 통제감이나 진정성까지 추론하지 않음.
+Q11	repetition	끝부분의 제안이 반복적이었다고 설명함.	높은 평정과 일부 비판이 공존함.
+Q12	interface_limit;preserve_options	한 번에 여러 유용한 제안을 받았지만 하나만 선택해야 했고 나머지를 저장하거나 다시 보고 싶었다고 설명함.	실제 대안 채택·수정 행동은 로그 확인이 필요함.
+Q13	availability_problem	여러 차례 제안이 없다는 응답을 받았고 이전 제안 하나만 사용했다고 설명함.	기술적 오류는 사용자의 추정이며 검증되지 않음.
+Q14	availability_problem;failed_ideation	제안이 새로운 내용을 더하지 못했고 이후 제안도 나오지 않아 협업이 어려웠다고 설명함.	서비스 가용성과 내용 적합성을 구분해야 함.
+Q15	intent_mismatch;human_completion	AI가 비교 논지를 이해하지 못해 결론을 직접 작성했다고 설명함.	인간의 마무리 행동은 사후 보고이며 인과 추정 근거는 아님.
+Q16	availability_problem	제안이 두 번만 제공되어 충분하지 않았다고 설명함.	낮은 이해 평정이 의미 이해보다 제안 부족을 반영할 수 있음.
+Q17	availability_problem;question_scaffolding;human_expression	지연 문제를 언급하면서도 AI가 질문으로 아이디어를 자극하고 자신이 직접 문장을 쓰게 하는 방식은 좋았다고 설명함.	낮은 이해 평정 안에도 유용한 도움의 요소가 섞여 있음.
+Q18	useful_ideation	뉴스와 구체적인 상황을 연결하는 좋은 제안을 받았다고 설명함.	낮은 소유감은 유용성 부재와 동일하지 않음.
+Q19	self_reported_stuck;useful_ideation;writing_continuation	처음에는 말하려는 방향이 분명했지만 진행 중 어려움을 겪었고 AI가 새 방향을 제공해 계속 쓸 수 있었다고 설명함.	도움 이후 소유감이 떨어졌다는 전후 측정은 없음.
+Q20	editor_role;delegated_composition	다른 세션보다 AI 제안을 많이 사용했고 자신을 작가보다 편집자에 가깝게 묘사함.	역할 변화가 만족스럽지 않았다고 직접 말하지는 않음.
+Q21	intent_fit;useful_ideation	제안이 자신의 글에 잘 맞아 개선 의견이 없다고 설명함.	높은 점수 전반에 공통 평가 경향이 있을 수 있음.
+Q22	useful_variety;human_choice;repetition	일부 반복이 있었지만 여러 제안 중 글의 방향을 자신이 고를 수 있었다고 설명함.	선택권 경험을 직접 측정한 척도로 대체할 수는 없음.
+Q23	availability_problem;contrarian_support_limit	반대 논거나 비주류 견해를 뒷받침하려 할 때 AI가 제안을 잘 내놓지 못했다고 설명함.	해당 견해의 정확성이나 윤리성은 이 코멘트만으로 판단하지 않음.
