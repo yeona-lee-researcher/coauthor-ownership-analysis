@@ -38,7 +38,7 @@ a.set_title('(a) Held-out writers (5-fold, by writer)', loc='left', fontsize=9, 
 a.set_ylim(0, .058); a.legend(frameon=False, fontsize=7.5, loc='upper left', ncol=1); a.yaxis.grid(True, color=GRID, linewidth=.6); a.set_axisbelow(True)
 
 # (b) later sessions of known writers: 90% predictive-interval coverage
-labels = {'n_query': 'Requests', 'n_accept': 'Accepted', 'human_share': 'Human share', 'duration_min': 'Duration', 'first_query_min': 'First request'}
+labels = {'n_query': 'Request episodes', 'n_accept': 'Accepted', 'human_share': 'Human share', 'duration_min': 'Duration', 'first_query_min': 'First request'}
 models = (('population', BLUE, 'o', 'Population'), ('writer', ORANGE, 's', 'Writer'), ('writer+stop+S', AQUA, '^', 'Writer + stopping + session'))
 y = np.arange(len(labels))
 for j, (m, c, mk, lab) in enumerate(models):

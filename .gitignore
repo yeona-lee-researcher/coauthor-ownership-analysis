@@ -23,3 +23,6 @@ paper/*.fdb_latexmk
 # Personal application answers (not part of the research repo)
 paper/application_answers.md
 paper/pg-*.png
+
+# Personal Korean summary (contains name)
+paper/summary_ko.*

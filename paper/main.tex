@@ -224,16 +224,16 @@ E2 & Ownership & AI revision rate (+10 pp) & 0.996 & [0.843, 1.176] \\
 \paragraph{E4: writing after a request.} In the 60\,s after a request, writers typed 15.4 [4.1, 26.8] more characters after an unanswered request and 10.0 [1.3, 18.6] more after a rejected one than after an accepted one (writer FE). This is expected mechanically, since accepted text substitutes for typing.
 
 \subsection{Microsimulation}
-Population transitions were similar across genres: after a writing burst the next unit was an accepted request (creative 61\%, argumentative 53\%), a pause (20\% / 24\%), a rejected request (16\% / 17\%), or an unanswered request (3\% / 7\%); unanswered requests were followed by another unanswered request 16\% / 13\% of the time (retries).
+Population transitions were similar across genres: after a writing burst the next unit was an accepted request (creative 61\%, argumentative 53\%), a pause (20\% / 24\%), a rejected request (16\% / 17\%), or an unanswered request (3\% / 7\%); unanswered requests were followed by another unanswered request 16\% / 13\% of the time (repeated failures).
 
 \begin{table}[h]
 \centering\small
-\caption{Validation of the process model. Coverage = share of observed sessions inside the simulated 90\% interval (nominal 0.90).}\label{tab:sim}
+\caption{Validation of the process model. Coverage = share of observed sessions inside the simulated 90\% interval (nominal 0.90). Q episodes include requests, late displays, and reopened lists. M0 knows token frequencies but not their order.}\label{tab:sim}
 \begin{tabular}{lccccc}
 \toprule
 & Log-lik/event & \multicolumn{4}{c}{Coverage} \\
 \cmidrule(lr){3-6}
-Model & (held out) & Requests & Accepted & Human share & Duration \\
+Model & (held out) & Q episodes & Accepted & Human share & Duration \\
 \midrule
 \multicolumn{6}{l}{\emph{A. Unseen writers (5-fold by writer)}} \\
 M0 iid tokens & $-1.272$ & .680 & .683 & .673 & .856 \\
@@ -254,13 +254,13 @@ Writer + stopping + session ($\kappa_h{=}5,\alpha{=}10$) & $+0.044$ vs.\ writer 
 \caption{(a) Distribution of the human share of inserted characters for held-out writers: observed vs.\ simulated. Simulated sessions are too concentrated and miss the high tail (sessions with little AI use). (b) 90\% predictive-interval coverage for writers' later sessions; writer-specific parameters move coverage toward nominal.}\label{fig:sim}
 \end{figure}
 
-\paragraph{A. Unseen writers.} The first-order model predicted held-out writers' event sequences much better than iid tokens ($-0.804$ vs.\ $-1.272$ nats/event), and session heterogeneity improved it further ($-0.745$). All models reproduced mean session summaries (e.g., human share 72.2\% simulated vs.\ 73.0\% observed) but were under-dispersed (simulated SD of human share 11.3 vs.\ 18.2; Figure~\ref{fig:sim}a). M0's similar coverage reflects noise, not a better description of the process.
+\paragraph{A. Unseen writers.} The first-order model predicted held-out writers' event sequences much better than a model that knows only token frequencies ($-0.804$ vs.\ $-1.272$ nats/event): the \emph{order} of actions carries information, e.g., an accepted suggestion was followed by a writing burst 86--87\% of the time. Session heterogeneity improved prediction further ($-0.745$); because its P\'olya-urn score updates on transitions already observed in the same session, this gain means that patterns emerging within a session are informative, not that a writer's style is known before the session starts. Part of the sequential regularity is induced by segmentation (consecutive writing events form one burst). All models reproduced mean session summaries (e.g., human share 72.2\% simulated vs.\ 73.0\% observed) but were under-dispersed (simulated SD of human share 11.3 vs.\ 18.2; Figure~\ref{fig:sim}a). M0's similar coverage reflects noise, not a better description of the process.
 
-\paragraph{B. Individual interaction styles.} Writer-specific parameters predicted the same writers' later sessions better than the population model: +0.068 nats/event [0.041, 0.106], positive for 35 of 39 writers. Session heterogeneity added +0.044 [0.018, 0.070] and writer-specific stopping +0.010 [0.005, 0.017]. Compared with the population model, the full model reduced the absolute error of the predicted human share by 4.96 pp [2.74, 7.20], of requests by 1.93 [0.93, 2.88], and of accepted suggestions by 1.44 [0.76, 2.11]; coverage approached but did not reach nominal (Figure~\ref{fig:sim}b).
+\paragraph{B. Individual interaction styles.} Writer-specific parameters predicted the same writers' later sessions better than the population model: +0.068 nats/event [0.041, 0.106], positive for 35 of 39 writers. Session heterogeneity added +0.044 [0.018, 0.070] and writer-specific stopping +0.010 [0.005, 0.017]. Compared with the population model, the full model reduced the absolute error of the predicted human share by 4.96 pp [2.74, 7.20], of requests by 1.93 [0.93, 2.88], and of accepted suggestions by 1.44 [0.76, 2.11]; coverage approached but did not reach nominal (Figure~\ref{fig:sim}b). Coverage of session duration was already adequate (.888 population, .926 full). The log-score gain is not an accuracy percentage; it is the improvement in the log-probability assigned to the actions that occurred.
 
-\paragraph{C. How much is the writer?} Observed intraclass correlations were high (human share .56 creative / .70 argumentative; requests .56 / .84). The full model reproduced most of this clustering (simulated .54 / .57 and .50 / .65) but not for duration (.15 / .06 vs.\ .61 / .57), so stopping behavior is under-individualized.
+\paragraph{C. How much is the writer?} Observed intraclass correlations were high (human share .56 creative / .70 argumentative; Q episodes .56 / .84). This in-sample check (the model is fit to all data, unlike B) shows that the full model reproduces much of the clustering in creative writing (.54, .50) but under-reproduces it in argumentative writing (.57, .65), and fails for duration (.15 / .06 vs.\ .61 / .57): overall session lengths are reproduced, but not the tendency of particular writers to write consistently long or short sessions. ICCs describe recurring differences between writers, which may reflect skill, task choice, strategy, or habit, not personality.
 
-\paragraph{D. Scenario (model-implied, not causal).} If unanswered requests had been answered, the fitted model implies +0.57 [0.43, 0.71] accepted suggestions per session, $-1.39$ pp [$-1.68$, $-1.09$] human share, and $-0.16$ requests (fewer retries). The scenario quantifies the scale of availability failures under the model; it is not an intervention effect.
+\paragraph{D. Scenario (model-implied, not causal).} Replacing the never-answered share of QN episodes (90\% creative, 97\% argumentative; the rest were answered late) with accepted or rejected displays in each row's observed ratio implies +0.53 [0.40, 0.66] accepted suggestions per session, $-1.32$ pp [$-1.60$, $-1.03$] human share of inserted characters, and $-0.16$ Q episodes. A lower human share here means more AI-inserted characters, not less human direction or creativity. The scenario quantifies the scale of availability failures under the model; it is not an intervention effect.
 
 \section{Discussion}
 \paragraph{Ideation help, availability, and ownership are different outcomes.}

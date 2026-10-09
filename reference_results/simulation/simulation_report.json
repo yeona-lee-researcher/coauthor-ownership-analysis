@@ -453,26 +453,30 @@
     }
   },
   "D_scenario_answer_unanswered": {
-    "note": "Model-implied under the fitted descriptive model; not a causal or intervention effect.",
+    "note": "Model-implied under the fitted descriptive model; not a causal or intervention effect. Only never-answered QN mass is moved. d_query counts all Q episodes (requests, late displays, reopens).",
+    "qn_never_answered_share": {
+      "creative": 0.9001848428835489,
+      "argumentative": 0.9712793733681462
+    },
     "d_accept": {
-      "mean": 0.5701038062283738,
+      "mean": 0.5309965397923876,
       "ci95_writer_bootstrap": [
-        0.42618361782842085,
-        0.7119820166273951
+        0.3992089780626523,
+        0.6576206704272839
       ]
     },
     "d_human_share": {
-      "mean": -1.3858851552924678,
+      "mean": -1.323075581782027,
       "ci95_writer_bootstrap": [
-        -1.6824819394596844,
-        -1.0874996786611597
+        -1.5990987317444376,
+        -1.032678390605125
       ]
     },
     "d_query": {
-      "mean": -0.16459515570934255,
+      "mean": -0.15903806228373701,
       "ci95_writer_bootstrap": [
-        -0.2223460812256499,
-        -0.10397912061353301
+        -0.2032870545171564,
+        -0.11059623624908686
       ]
     }
   }

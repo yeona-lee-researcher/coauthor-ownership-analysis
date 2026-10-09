@@ -96,7 +96,7 @@ def fit(train, kappa=None, kappa_e=None, kappa_h=None, alpha=None, order=1):
     """Return a model dict. kappa=None -> population only; order=0 -> iid tokens;
     kappa_h -> writer stopping hazards; alpha -> session-level Dirichlet heterogeneity."""
     M = {'pop_start': {}, 'pop_tr': {}, 'hazard': {}, 'pool': {}, 'w_start': {}, 'w_tr': {}, 'w_pool': {},
-         'w_hazard': {}, 'kappa': kappa, 'kappa_e': kappa_e, 'kappa_h': kappa_h, 'alpha': alpha, 'order': order}
+         'w_hazard': {}, 'qn_never': {}, 'kappa': kappa, 'kappa_e': kappa_e, 'kappa_h': kappa_h, 'alpha': alpha, 'order': order}
     for g in GENRES:
         eg = train[train.genre == g]
         st, tr = counts(eg)
@@ -110,6 +110,8 @@ def fit(train, kappa=None, kappa_e=None, kappa_h=None, alpha=None, order=1):
         ends, units = hazard_counts(eg)
         M['hazard'][g] = (ends + .05) / (units + 1.0)
         M['pool'][g] = {k: eg.loc[eg.k == k, ['span_s', 'u_ins', 'a_ins']].to_numpy() for k in range(K)}
+        qn = eg[eg.k == TI['QN']]
+        M['qn_never'][g] = float((~qn.answered_late.astype(bool)).mean()) if len(qn) else 1.0
         if kappa is not None:
             for w, ew in eg.groupby('worker_id'):
                 sw, tw = counts(ew)
@@ -174,11 +176,16 @@ def simulate(M, sessions, reps, rng, scenario=None, max_steps=3000):
             if wp is not None and len(wp[k]):
                 ws = add(('w', w, g, k), wp[k]); wstart[ix, k], wlen[ix, k] = ws
                 lam[ix, k] = len(wp[k]) / (len(wp[k]) + M['kappa_e'])
-    if scenario == 'answer_unanswered':          # move QN mass to QA/QR in proportion, row-wise
+    if scenario == 'answer_unanswered':
+        # QN also contains requests whose suggestions appeared after the writer resumed
+        # (answered_late); only the never-answered share of QN mass is moved to QA/QR,
+        # in proportion to each row's QA:QR ratio.
         qa, qr, qn = TI['QA'], TI['QR'], TI['QN']
+        f = rows.genre.map(M['qn_never']).to_numpy()[:, None]
         for P in (T, S0[:, None, :]):
             share = P[..., qa] / np.maximum(P[..., qa] + P[..., qr], EPS)
-            P[..., qa] += P[..., qn] * share; P[..., qr] += P[..., qn] * (1 - share); P[..., qn] = 0
+            moved = P[..., qn] * f
+            P[..., qa] += moved * share; P[..., qr] += moved * (1 - share); P[..., qn] -= moved
     if M['alpha'] is not None:               # session-level heterogeneity in transition rows
         G = rng.gamma(np.maximum(M['alpha'] * T, 1e-8)); T = G / G.sum(2, keepdims=True)
     EM = np.vstack(big); H = np.stack(Hrows)
@@ -339,7 +346,9 @@ scen = simulate(Mall, obs[['worker_id', 'genre']], A.reps, np.random.default_rng
 dd = pd.DataFrame({'worker_id': base.worker_id, 'd_accept': scen.n_accept - base.n_accept,
                    'd_human_share': scen.human_share - base.human_share, 'd_query': scen.n_query - base.n_query})
 report['D_scenario_answer_unanswered'] = {
-    'note': 'Model-implied under the fitted descriptive model; not a causal or intervention effect.',
+    'note': 'Model-implied under the fitted descriptive model; not a causal or intervention effect. '
+            'Only never-answered QN mass is moved. d_query counts all Q episodes (requests, late displays, reopens).',
+    'qn_never_answered_share': Mall['qn_never'],
     **{c: {'mean': float(dd[c].mean()), 'ci95_writer_bootstrap': boot_writer_mean(dd.dropna(subset=[c]), c)} for c in ['d_accept', 'd_human_share', 'd_query']}}
 
 # ---------------------------------------------------------------- outputs
