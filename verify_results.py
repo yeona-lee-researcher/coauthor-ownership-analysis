@@ -22,6 +22,14 @@ def main():
     if not got.index.equals(ref.index):
         raise ValueError('Model/parameter set differs from reference.')
     cols = ['beta','se','ci_low','ci_high','p','OR','OR_low','OR_high','p_holm_secondary']
+    # |beta| > 10 on a logit scale signals (quasi-)separation, e.g. a prompt with no
+    # ownership <= 3 in the O>3 model. Such nuisance coefficients are not identified and
+    # drift across optimizer versions, so they are reported rather than compared.
+    separated = (ref['beta'].abs() > 10) & ~ref.index.get_level_values('term').str.startswith('threshold_')
+    if separated.any():
+        print('Not identified (quasi-separation), excluded from comparison:')
+        print(ref.loc[separated, ['beta']].to_string())
+    got, ref = got[~separated], ref[~separated]
     if not np.allclose(got[cols], ref[cols], rtol=1e-5, atol=1e-6, equal_nan=True):
         raise ValueError('Model results differ. Inspect source version, software versions, and outputs before reusing the manuscript.')
     if actual['FE_cluster_bootstrap']['B'] != expected['FE_cluster_bootstrap']['B'] or actual['FE_cluster_bootstrap']['seed'] != expected['FE_cluster_bootstrap']['seed']:

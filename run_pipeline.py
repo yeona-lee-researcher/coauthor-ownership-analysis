@@ -1,4 +1,5 @@
-"""Run analysis, verified pilot-code join, and report-table generation."""
+"""Run analysis, verified pilot-code join, report tables, and (with --logs) log replay,
+process models, microsimulation, and figures."""
 from pathlib import Path
 import argparse
 import os
@@ -14,6 +15,8 @@ def main():
     parser.add_argument('--out', type=Path, default=Path('results'))
     parser.add_argument('--bootstrap', type=int, default=500)
     parser.add_argument('--seed', type=int, default=20261009)
+    parser.add_argument('--logs', type=Path, help='coauthor-v1.0 directory of .jsonl logs; enables process analysis and simulation')
+    parser.add_argument('--reps', type=int, default=100, help='Simulated replicates per session (default 100)')
     parser.add_argument('--skip-pilot-codes', action='store_true', help='For a changed source: do not reuse original qualitative codes')
     args = parser.parse_args()
     source, out = args.input.resolve(), args.out.resolve()
@@ -33,6 +36,15 @@ def main():
         if old.exists():
             old.unlink()
     steps.append(('tables', [sys.executable, str(ROOT / 'make_tables.py'), '--out', str(out)]))
+    if args.logs:
+        if not args.logs.is_dir():
+            parser.error(f'Log directory not found: {args.logs}')
+        steps += [
+            ('process_logs', [sys.executable, str(ROOT / 'process_logs.py'), '--logs', str(args.logs.resolve()), '--out', str(out / 'process')]),
+            ('process_models', [sys.executable, str(ROOT / 'process_models.py'), '--input', str(source), '--results', str(out)]),
+            ('simulation', [sys.executable, str(ROOT / 'simulate.py'), '--input', str(source), '--results', str(out), '--reps', str(args.reps), '--seed', str(args.seed)]),
+            ('figures', [sys.executable, str(ROOT / 'make_figures.py'), '--results', str(out), '--out', str(out / 'figures')]),
+        ]
     for name, command in steps:
         print(f'Running {name} ...', flush=True)
         with (out / f'{name}.log').open('w', encoding='utf-8') as log:

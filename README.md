@@ -1,3 +1,40 @@
+# CoAuthor: feeling understood, ideation help, and ownership
+
+Exploratory reanalysis of the public [CoAuthor](https://coauthor.stanford.edu/) dataset (Lee, Liang & Yang, CHI 2022).
+**Paper:** [`paper/main.pdf`](paper/main.pdf) (8 pages). All findings are observational associations.
+
+| Layer | What it does | Script |
+|---|---|---|
+| Survey | Links metadata + surveys; within/between-writer ordinal GEE, sensitivity analyses, bootstrap | `analyze.py` |
+| Qualitative | Hash-checked join of 23 preliminary (AI-assisted, not yet human-reviewed) case codes | `join_qualitative.py` |
+| Log replay | Replays every Quill delta with per-character provenance; episodes W / P / QA / QR / QN | `process_logs.py` |
+| Process models | E1–E4: availability → understanding, AI revision → ownership, pauses and requests, writing after requests | `process_models.py` |
+| Microsimulation | Semi-Markov model with writer shrinkage, session heterogeneity, writer stopping; validated on held-out writers and later sessions | `simulate.py` |
+| Shared estimators | Cluster-robust logistic / ordinal GEE, cluster OLS | `stats_core.py` |
+
+```bash
+python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python download_data.py                            # metadata XLSX -> data/raw/
+# interaction logs: unzip coauthor-v1.0 from https://coauthor.stanford.edu/ (one .jsonl per session)
+python run_pipeline.py --input data/raw/coauthor_metadata.xlsx --logs path/to/coauthor-v1.0 --out results
+python verify_results.py --out results             # compare with reference_results/
+python -m unittest discover -s tests               # 9 tests: data guards + replay provenance
+```
+
+The full pipeline runs in under a minute. `results/` and `data/` are git-ignored (they contain participant comments);
+`reference_results/` holds the frozen aggregate outputs reported in the paper, including `process/` and `simulation/`.
+
+**Key results.** Within-writer understanding → ownership OR 0.847 [0.660, 1.086] (H1 not supported); understanding → ideation help OR 3.396 [2.761, 4.176];
+unanswered-request rate (+10 pp) → understanding OR 0.770 [0.687, 0.862]; writer-specific process parameters improve prediction of the same writer's later sessions by +0.068 nats/event [0.041, 0.106].
+
+**Replay checks.** Replayed human share of inserted characters matches metadata `written_by_human` within 1 pp in 99.9% of sessions (the metadata measure is
+of *inserted*, not final, text); replayed selections match `num_selected` in 100%; metadata `num_query` counts answered requests only.
+
+> The Korean manuscript `CoAuthor_Research_Draft_KO.md` and the section below predate the log replay and microsimulation; `paper/main.tex` is current.
+
+---
+
 # CoAuthor: AI의 도움과 소유감은 어떻게 연결되는가?
 
 Mina Lee 등의 CoAuthor 공개 메타데이터·설문을 재분석하는 **실행 가능한 연구 코드셋**입니다. Git 저장소의 최상위 폴더로 사용할 수 있습니다. 실제 GitHub 원격 저장소를 생성하거나 업로드한 것은 아닙니다.

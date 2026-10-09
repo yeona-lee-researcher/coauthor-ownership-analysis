@@ -14,6 +14,7 @@ from scipy.special import expit
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from stats_core import design, logistic_cluster
 
 P=argparse.ArgumentParser(description=__doc__)
 P.add_argument('--input', required=True, help='Original CoAuthor XLSX workbook')
@@ -120,35 +121,6 @@ primary.to_csv(OUT/'analysis_data.csv',index=False)
 
 BASE='understanding_w + understanding_b + human10_w + human10_b + C(prompt_code) + high_creative + high_argumentative'
 fits={}; details={}; rows=[]
-def design(d,rhs,intercept=False):
-    parts=[]
-    if intercept: parts.append(pd.DataFrame({'Intercept':np.ones(len(d))},index=d.index))
-    for term in rhs.split(' + '):
-        if term.startswith('C('):
-            c=term[2:-1]; parts.append(pd.get_dummies(d[c],prefix=c,drop_first=True,dtype=float))
-        elif ':' in term:
-            a,b=term.split(':'); parts.append(pd.DataFrame({term:d[a]*d[b]},index=d.index))
-        else: parts.append(d[[term]].astype(float))
-    return pd.concat(parts,axis=1)
-
-def logistic_cluster(X,y,groups,equal_person=False):
-    Z=X.to_numpy(dtype=float); y=np.asarray(y,dtype=float); n=len(y)
-    gc=pd.Categorical(groups); G=len(gc.categories)
-    weights=np.ones(n)
-    if equal_person: weights=n/(G*np.bincount(gc.codes)[gc.codes])
-    def obj(b):
-        eta=Z@b
-        return np.sum(weights*(np.logaddexp(0,eta)-y*eta))/n, Z.T@(weights*(expit(eta)-y))/n
-    opt=minimize(obj,np.zeros(Z.shape[1]),jac=True,method='BFGS',options={'gtol':1e-9,'maxiter':1000})
-    b=opt.x; p=expit(Z@b); H=Z.T@((weights*p*(1-p))[:,None]*Z)
-    inv=np.linalg.inv(H)
-    S=np.zeros((G,Z.shape[1])); np.add.at(S,gc.codes,Z*(weights*(y-p))[:,None])
-    V=inv@(S.T@S)@inv*(G/(G-1)); se=np.sqrt(np.maximum(0,np.diag(V)))
-    crit=t.ppf(.975,G-1); pv=2*t.sf(np.abs(b/se),G-1)
-    maxscore=float(np.max(np.abs(obj(b)[1])))
-    assert maxscore<1e-6, (opt.message,maxscore)
-    return {'b':b,'se':se,'lo':b-crit*se,'hi':b+crit*se,'p':pv,'V':V,'maxscore':maxscore,'condition_number':float(np.linalg.cond(H)),'optimizer_message':str(opt.message)}
-
 def record(name,X,f,ordinal=True):
     for i,term in enumerate(X.columns):
         r={'model':name,'term':term,'beta':float(f['b'][i]),'se':float(f['se'][i]),'ci_low':float(f['lo'][i]),'ci_high':float(f['hi'][i]),'p':float(f['p'][i])}
