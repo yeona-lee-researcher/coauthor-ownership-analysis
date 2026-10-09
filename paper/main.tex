@@ -80,9 +80,9 @@ Linked sessions & 1,444 & 1 metadata session had no survey \\
 \end{tabular}
 \end{table}
 
-\paragraph{Variables.} $U$, $I$, $O$: 1--7 ratings. $H$: metadata \texttt{written\_by\_human}, which our replay shows to be the human share of \emph{inserted} characters (including text later deleted), not of the final text; entered per 10 pp. Prompt (20 levels) enters as fixed effects; model setting is the genre-specific high/low decoding configuration. Session duration is not treated as time pressure, as the CoAuthor timer indicated a minimum, not a deadline.
+\paragraph{Variables.} $U$, $I$, $O$: 1--7 ratings. $H$: metadata \texttt{written\_by\_human}, entered per 10 pp. CoAuthor's Table 3 describes this as the share of \emph{final} text written by writers; at the session level, our replay shows that it matches the human share of \emph{inserted} characters (within 1 pp in 99.9\% of sessions, vs.\ 43\% for the final-text share), although the two definitions give nearly the same mean (73.0\% vs.\ 72.7\%; the paper reports 72.6\%). Prompt (20 levels) enters as fixed effects; model setting is the genre-specific high/low decoding configuration. Session duration is not treated as time pressure, as the CoAuthor timer indicated a minimum, not a deadline.
 
-\paragraph{Discrepancies to resolve.} The paper reports 63 writers, whereas the public metadata contain 61 unique IDs; the paper describes ownership on a 5-point scale, whereas responses range 1--7. We used the observed coding and flag both for confirmation with the dataset authors.
+\paragraph{Discrepancies to resolve.} CoAuthor reports 63 writers (58 creative, 49 argumentative), whereas the public metadata contain 61 unique IDs (57 and 47). Section~5.2.2 of the paper describes ownership as a 5-point Likert scale, whereas Appendix~C lists the other items as 7-point and the downloaded ownership responses range 1--7. We used the observed coding and flag both for confirmation with the dataset authors.
 
 \section{Method}
 \subsection{Survey models}
@@ -139,7 +139,7 @@ Coding was not blind, was produced by a single AI-assisted coder, and has not ye
 
 \section{Results}
 \subsection{Survey descriptives and hypothesis tests}
-Ownership was concentrated at the top of the scale (565 sessions at 7, 406 at 6). Means (SD): ownership 5.87 (1.23) creative vs.\ 5.94 (1.16) argumentative; understanding 5.52 (1.52) vs.\ 5.39 (1.63); ideation help 5.47 (1.71) vs.\ 5.06 (1.89); human share 73.2\% vs.\ 71.0\%. Pooled Spearman correlations with ownership were small (understanding .058, ideation .105, human share .281).
+Ownership was concentrated at the top of the scale (565 sessions at 7, 406 at 6). Means (SD): ownership 5.87 (1.23) creative vs.\ 5.94 (1.16) argumentative; understanding 5.52 (1.52) vs.\ 5.39 (1.63); ideation help 5.47 (1.71) vs.\ 5.06 (1.89); human share 73.2\% vs.\ 71.0\%. Pooled Spearman correlations with ownership were small (understanding .058, ideation .105, human share .281); the last is consistent with the Pearson correlation of 0.3 between ownership and the fraction of text written by writers reported by CoAuthor (Section~5.2.2).
 
 \begin{table}[h]
 \centering\small
@@ -219,7 +219,7 @@ E2 & Ownership & AI revision rate (+10 pp) & 0.996 & [0.843, 1.176] \\
 \end{table}
 
 \paragraph{E1: availability and understanding.} In sessions where the same writer experienced more unanswered requests or fewer displayed suggestions than usual, they rated understanding lower (Table~\ref{tab:logs}). The corresponding between-writer terms were imprecise. Writers also rated understanding lower in sessions where they typed a larger share themselves.
-\paragraph{E2: revising AI text.} Deleting more of the inserted AI text was not associated with ownership ($n=1{,}388$ sessions with at least one acceptance); ownership tracked the human share of inserted text instead.
+\paragraph{E2: revising AI text.} Deleting more of the inserted AI text was not associated with ownership ($n=1{,}388$ sessions with at least one acceptance); ownership tracked the human share of inserted text instead. This agrees with CoAuthor's observation that the number of edit events was not meaningfully correlated with ownership ($r=0.1$), here with a provenance-based measure and within-writer adjustment.
 \paragraph{E3: pauses and requests.} Requests followed the last writing event after a median of 0.41\,s (IQR 0.20--1.04; 90th percentile 2.7\,s). Only 2.1\% [1.2, 4.0] of requests followed $\geq$10\,s of inactivity (0.9\% for $\geq$20\,s, 0.5\% for $\geq$30\,s; writer-bootstrap CIs). Conversely, 7.9\% [5.7, 9.9] of $\geq$10-s pauses after writing ended in a request (10.9\% for $\geq$30\,s). In these logs, requesting a suggestion is mostly an in-flow action rather than a response to a long stall.
 \paragraph{E4: writing after a request.} In the 60\,s after a request, writers typed 15.4 [4.1, 26.8] more characters after an unanswered request and 10.0 [1.3, 18.6] more after a rejected one than after an accepted one (writer FE). This is expected mechanically, since accepted text substitutes for typing.
 
@@ -283,14 +283,14 @@ Single-item, same-time self-reports cannot identify causal order; human share ma
 \end{enumerate}
 
 \paragraph{Reproducibility.}
-\texttt{python run\_pipeline.py --input <xlsx> --logs <coauthor-v1.0>} runs linkage, survey models, hash-checked qualitative join, log replay, process models, microsimulation, and figures in under a minute. \texttt{verify\_results.py} compares a rerun with \texttt{reference\_results/}; 9 unit tests cover data guards and replay provenance.
+\texttt{python run\_pipeline.py --input <xlsx> --logs <coauthor-v1.0>} runs linkage, survey models, hash-checked qualitative join, log replay, process models, microsimulation, and figures in under a minute. \texttt{verify\_results.py} compares a rerun with \texttt{reference\_results/}; 9 unit tests cover data guards and replay provenance. A fresh clone with a freshly downloaded workbook, pinned packages, and Python 3.11 reproduced all survey parameters, the process-model estimates to $2\times10^{-8}$, and the simulation report byte for byte.
 
 \small
 \begin{thebibliography}{9}
-\bibitem{lee2022coauthor} M.~Lee, P.~Liang, and Q.~Yang. CoAuthor: Designing a human--AI collaborative writing dataset for exploring language model capabilities. In \emph{CHI}, 2022. \url{https://doi.org/10.1145/3491102.3502030}
-\bibitem{draxler2024ghostwriter} F.~Draxler et al. The AI ghostwriter effect: When users do not perceive ownership of AI-generated text but self-declare as authors. \emph{ACM TOCHI}, 31(2), 2024. \url{https://doi.org/10.1145/3637875}
-\bibitem{curran2011disaggregation} P.~J.~Curran and D.~J.~Bauer. The disaggregation of within-person and between-person effects in longitudinal models of change. \emph{Annual Review of Psychology}, 62:583--619, 2011.
-\bibitem{ryan2000sdt} R.~M.~Ryan and E.~L.~Deci. Self-determination theory and the facilitation of intrinsic motivation, social development, and well-being. \emph{American Psychologist}, 55:68--78, 2000.
-\bibitem{braun2021} V.~Braun and V.~Clarke. Can I use TA? Should I use TA? Should I not use TA? \emph{Counselling and Psychotherapy Research}, 21:37--47, 2021.
+\bibitem{lee2022coauthor} M.~Lee, P.~Liang, and Q.~Yang. CoAuthor: Designing a human--AI collaborative writing dataset for exploring language model capabilities. In \emph{Proceedings of the 2022 CHI Conference on Human Factors in Computing Systems}, 2022. \url{https://doi.org/10.1145/3491102.3502030}. Data: \url{https://coauthor.stanford.edu/}
+\bibitem{draxler2024ghostwriter} F.~Draxler et al. The AI ghostwriter effect: When users do not perceive ownership of AI-generated text but self-declare as authors. \emph{ACM Transactions on Computer-Human Interaction}, 31(2), Article 25, 1--40, 2024. \url{https://doi.org/10.1145/3637875}
+\bibitem{curran2011disaggregation} P.~J.~Curran and D.~J.~Bauer. The disaggregation of within-person and between-person effects in longitudinal models of change. \emph{Annual Review of Psychology}, 62:583--619, 2011. \url{https://doi.org/10.1146/annurev.psych.093008.100356}
+\bibitem{ryan2000sdt} R.~M.~Ryan and E.~L.~Deci. Self-determination theory and the facilitation of intrinsic motivation, social development, and well-being. \emph{American Psychologist}, 55(1):68--78, 2000. \url{https://doi.org/10.1037/0003-066X.55.1.68}
+\bibitem{braun2021} V.~Braun and V.~Clarke. Can I use TA? Should I use TA? Should I not use TA? Comparing reflexive thematic analysis and other pattern-based qualitative analytic approaches. \emph{Counselling and Psychotherapy Research}, 21(1):37--47, 2021. \url{https://doi.org/10.1002/capr.12360}
 \end{thebibliography}
 \end{document}

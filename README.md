@@ -16,7 +16,8 @@ Exploratory reanalysis of the public [CoAuthor](https://coauthor.stanford.edu/) 
 python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python download_data.py                            # metadata XLSX -> data/raw/
-# interaction logs: unzip coauthor-v1.0 from https://coauthor.stanford.edu/ (one .jsonl per session)
+# interaction logs: 'Download writing sessions' on https://coauthor.stanford.edu/
+#   (https://drive.google.com/file/d/1C9FCCsyY-5I7mcBHi-__R7lxHkGX_-9Q/view); unzip -> coauthor-v1.0/*.jsonl
 python run_pipeline.py --input data/raw/coauthor_metadata.xlsx --logs path/to/coauthor-v1.0 --out results
 python verify_results.py --out results             # compare with reference_results/
 python -m unittest discover -s tests               # 9 tests: data guards + replay provenance
