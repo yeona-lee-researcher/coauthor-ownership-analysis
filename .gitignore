@@ -27,4 +27,3 @@ paper/pg-*.png
 # Personal Korean summary (contains name)
 paper/summary_ko.*
 paper/summary_en.*
-!paper/summary_en.tex
